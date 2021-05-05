@@ -4,10 +4,18 @@ const { findInReactTree } = require('powercord/util');
 const { inject, uninject } = require('powercord/injector');
 const { open: openModal } = require('powercord/modal');
 const Model = require('./Components/Model');
+const Settings = require('./Components/Settings');
 
 module.exports = class CoolMF extends Plugin {
 	startPlugin() {
 		this.loadStylesheet('style.scss');
+
+		powercord.api.settings.registerSettings(this.entityID, {
+			category: this.entityID,
+			label: 'Github in discord',
+			render: Settings,
+		});
+
 		const Menu = getModule(['MenuGroup', 'MenuItem'], false);
 		const MessageContextMenu = getModule(m => m.default?.displayName === 'MessageContextMenu', false);
 		inject('Gmodel-context-menu', MessageContextMenu, 'default', (args, res) => {

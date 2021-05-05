@@ -3,6 +3,7 @@ const { close: closeModal } = require('powercord/modal');
 const { get } = require('powercord/http');
 const { React } = require('powercord/webpack');
 const { Modal } = require('powercord/components/modal');
+const { decrypt } = require('../crypto');
 
 module.exports = class githubModel extends React.PureComponent {
 	constructor() {
@@ -12,26 +13,25 @@ module.exports = class githubModel extends React.PureComponent {
 
 	componentDidMount() {
 		const repo = get(`https://api.github.com/repos/${this.props.link[3]}/${this.props.link[4]}/contents`);
-		if (this.props.getSetting('api-key')) repo.set('Authorization', `token ${this.props.getSetting('api-token')}`);
+		if (this.props.getSetting('api-key')) repo.set('Authorization', `token ${decrypt(this.props.getSetting('api-key'))}`);
 		repo.then(res => this.setState({ data: res }));
 
 		const branches = get(`https://api.github.com/repos/${this.props.link[3]}/${this.props.link[4]}/branches`);
-		if (this.props.getSetting('api-key')) branches.set('Authorization', `token ${this.props.getSetting('api-token')}`);
+		if (this.props.getSetting('api-key')) branches.set('Authorization', `token ${decrypt(this.props.getSetting('api-key'))}`);
 		branches.then(res => this.setState({ branches: res.body }));
 
 		const defaultB = get(`https://api.github.com/repos/${this.props.link[3]}/${this.props.link[4]}`);
-		if (this.props.getSetting('api-key')) defaultB.set('Authorization', `token ${this.props.getSetting('api-token')}`);
+		if (this.props.getSetting('api-key')) defaultB.set('Authorization', `token ${decrypt(this.props.getSetting('api-key'))}`);
 		defaultB.then(res => this.setState({ rootInfo: res.body, selectedBranch: res.body.default_branch }));
 	}
 
 	changeBranch(branch) {
 		const repo = get(`https://api.github.com/repos/${this.props.link[3]}/${this.props.link[4]}/contents/?ref=${branch}`);
-		if (this.props.getSetting('api-key')) repo.set('Authorization', `token ${this.props.getSetting('api-token')}`);
+		if (this.props.getSetting('api-key')) repo.set('Authorization', `token ${decrypt(this.props.getSetting('api-key'))}`);
 		repo.then(res => this.setState({ data: res, selectedBranch: branch }));
 	}
 
 	render() {
-		console.log(this.state.rootInfo);
 		return (
 			<Modal className="githubModel">
 				<Modal.Header>
