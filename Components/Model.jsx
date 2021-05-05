@@ -35,8 +35,6 @@ module.exports = class githubModel extends React.PureComponent {
 			<Modal className="githubModel">
 				<Modal.Header>
 					<p>{this.props.link[4]}</p>
-				</Modal.Header>
-				<Modal.Content>
 					{this.state.branches && (
 						<select value={this.state.selectedBranch} onChange={change => this.changeBranch(change.currentTarget.value)}>
 							{this.state.branches.map(branch => (
@@ -44,10 +42,17 @@ module.exports = class githubModel extends React.PureComponent {
 							))}
 						</select>
 					)}
+				</Modal.Header>
+				<Modal.Content>
 					{this.state.data && (
 						<div>
 							{this.state.data.body.map(tree => (
 								<p className={tree.type === 'dir' ? 'Gfolder' : 'Gfile'}>
+									{tree.type === 'dir' ? (
+										<img src="https://raw.githubusercontent.com/Pavui/Assets/main/svg-path.svg" height={32} width={32} />
+									) : (
+										<img src="https://raw.githubusercontent.com/Pavui/Assets/main/svg-path%20(1).svg" height={32} width={32} />
+									)}
 									<a onClick={() => require('electron').shell.openExternal(tree.html_url)}>
 										{tree.name} {tree.type === 'dir' && '(FOLDER)'}
 									</a>
