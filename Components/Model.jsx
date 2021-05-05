@@ -18,6 +18,16 @@ module.exports = class githubModel extends React.PureComponent {
 		const branches = get(`https://api.github.com/repos/${this.props.link[3]}/${this.props.link[4]}/branches`);
 		if (this.props.getSetting('api-key')) branches.set('Authorization', `token ${this.props.getSetting('api-token')}`);
 		branches.then(res => this.setState({ branches: res.body }));
+
+		const defaultB = get(`https://api.github.com/repos/${this.props.link[3]}/${this.props.link[4]}`);
+		if (this.props.getSetting('api-key')) defaultB.set('Authorization', `token ${this.props.getSetting('api-token')}`);
+		defaultB.then(res => this.setState({ selectedBranch: res.body.default_branch }));
+	}
+
+	changeBranch(branch) {
+		const repo = get(`https://api.github.com/repos/${this.props.link[3]}/${this.props.link[4]}/contents/?ref=${branch}`);
+		if (this.props.getSetting('api-key')) repo.set('Authorization', `token ${this.props.getSetting('api-token')}`);
+		repo.then(res => this.setState({ data: res, selectedBranch: branch }));
 	}
 
 	render() {
@@ -28,7 +38,7 @@ module.exports = class githubModel extends React.PureComponent {
 				</Modal.Header>
 				<Modal.Content>
 					{this.state.branches && (
-						<select>
+						<select value={this.state.selectedBranch} onChange={change => this.changeBranch(change.currentTarget.value)}>
 							{this.state.branches.map(branch => (
 								<option value={branch.name}>{branch.name}</option>
 							))}
