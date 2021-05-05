@@ -49,9 +49,9 @@ module.exports = class githubModel extends React.PureComponent {
 							{this.state.data.body.map(tree => (
 								<p className={tree.type === 'dir' ? 'Gfolder' : 'Gfile'}>
 									{tree.type === 'dir' ? (
-										<img src="https://raw.githubusercontent.com/Pavui/Assets/main/svg-path.svg" height={32} width={32} />
+										<img src="https://raw.githubusercontent.com/Pavui/Assets/main/svg-path.svg" height={16} width={16} />
 									) : (
-										<img src="https://raw.githubusercontent.com/Pavui/Assets/main/svg-path%20(1).svg" height={32} width={32} />
+										<img src="https://raw.githubusercontent.com/Pavui/Assets/main/svg-path%20(1).svg" height={16} width={16} />
 									)}
 									<a onClick={() => require('electron').shell.openExternal(tree.html_url)}>
 										{tree.name} {tree.type === 'dir' && '(FOLDER)'}
