@@ -36,7 +36,7 @@ module.exports = class CoolMF extends Plugin {
 						React.createElement(Menu.MenuItem, {
 							action: () => openModal(() => React.createElement(Model, { link: link, getSetting: this.settings.get })),
 							id: 'githubModule',
-							label: 'Open Model',
+							label: 'Open Repository',
 						})
 					)
 				);

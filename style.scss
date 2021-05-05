@@ -13,8 +13,29 @@
 		p {
 			text-transform: capitalize;
 			color: var(--text-normal);
+			font-weight: 500;
 			max-width: 300px;
 			font-size: 24px;
+		}
+	}
+	.star-svg {
+		display: flex;
+		position: relative;
+		align-items: center;
+		flex-direction: row-reverse;
+		border-left: solid 1px rgba(255, 255, 255, 0.2);
+		padding-left: 9px;
+		height: 25px;
+		left:10px;
+		top: 0px;
+		svg {
+			margin-left: 5px;
+			fill: #8b949e;
+			height:20px;
+			width: 20px;
+		}
+		p {
+			color: var(--text-normal);
 		}
 	}
 
@@ -86,22 +107,23 @@
 				background-color: #18191a;
 			}
 		}
-		.star-svg {
-			display: flex;
-			position: absolute;
-			align-items: center;
-			right: 39rem;
-			& svg {
-				margin-right: 4px;
-				fill: #8b949e;
-			}
-			& p {
-				color: var(--text-normal);
-			}
-		}
 		.owner-profile {
 			position: absolute;
-			right: 40rem;
+			left: 10px;
+			p{
+				text-transform: capitalize;
+				color: var(--text-normal);
+				position: absolute;
+				font-size: 20px;
+				width:max-content;
+				left:50px;
+				top: -2px;
+			}
+			img{
+				border-radius: 6px;
+				width: 43px;
+				height:43px;
+			}
 		}
 	}
 }
