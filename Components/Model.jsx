@@ -36,7 +36,7 @@ module.exports = class githubModel extends React.PureComponent {
 				<Modal.Header>
 					<p>{this.props.link[4]}</p>
 					{this.state.branches && (
-						<select value={this.state.selectedBranch} onChange={change => this.changeBranch(change.currentTarget.value)}>
+						<select className="Gbranches" value={this.state.selectedBranch} onChange={change => this.changeBranch(change.currentTarget.value)}>
 							{this.state.branches.map(branch => (
 								<option value={branch.name}>{branch.name}</option>
 							))}
