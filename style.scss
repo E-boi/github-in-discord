@@ -1,0 +1,92 @@
+
+
+.githubModel{
+    border-radius: 10px;
+    width: 600px;
+    height:400px;
+
+    // Header
+    .header-1TKi98{
+        background-color: transparent;
+        border-bottom: solid 1px var(--background-secondary);
+        box-shadow: none !important;
+        padding: 3px 12px;
+        z-index: 0;
+        p {
+            text-transform: capitalize;
+            color: var(--text-normal);
+            max-width: 300px;
+            font-size: 24px;
+        }
+    }
+
+    // Content
+    .content-1LAB8Z{
+        border-radius: 0 !important;
+        padding: 0 !important;
+
+        // Files and Folders
+        div{
+            .Gfile,
+            .Gfolder{
+                border-top: solid 1px rgba(32, 34, 37, 0.5);
+                padding: 10px 0 0 17px;
+                &:first-child{
+                    margin-top: 0;
+                }
+                &:last-child{
+                    border-bottom: solid 1px rgba(32, 34, 37, 0.5);
+                    padding-bottom: 12px;
+                }
+                a{
+                    color:var(--text-normal);
+                    &:hover{
+                        color:var(--text-link);
+                        text-decoration: underline;
+                    }
+                }
+                img{
+                    position: relative;
+                    right:9px;
+                    top: 2px;
+                }
+            }
+        }
+        &::-webkit-scrollbar{
+            display: none;
+        }
+    }
+
+    // Branch Selector
+    .Gbranches{
+        background-color: rgba(0, 0, 0, 0.1);
+        border: solid 1px rgba(32, 34, 37, 0.5);
+        color: var(--text-normal);
+        padding: 0 15px 0 4px;
+        border-radius: 7px;
+        position: absolute;
+        min-height: 40px;
+        font-size: 18px;
+        width: 300px;
+        top: 10px;
+        right:10px;
+        option{
+            outline: none !important;
+        }
+    }
+
+    // footer
+    .footer-2gL1pp{
+        border-radius: 0 0 10px 10px;
+        box-shadow: none !important;
+        .button-38aScr{
+            background-color: var(--background-tertiary);
+            transition: 100ms ease all;
+            border-radius: 10px;
+            width: 100%;
+            &:hover{
+                background-color: #18191a;
+            }
+        }
+    }
+}
