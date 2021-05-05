@@ -47,7 +47,7 @@ module.exports = class githubModel extends React.PureComponent {
 					{this.state.data && (
 						<div>
 							{this.state.data.body.map(tree => (
-								<p className="Gfiles">
+								<p className={tree.type === 'dir' ? 'Gfolder' : 'Gfile'}>
 									<a onClick={() => require('electron').shell.openExternal(tree.html_url)}>
 										{tree.name} {tree.type === 'dir' && '(FOLDER)'}
 									</a>
