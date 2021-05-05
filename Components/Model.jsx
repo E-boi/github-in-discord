@@ -14,16 +14,26 @@ module.exports = class githubModel extends React.PureComponent {
 		const repo = get(`https://api.github.com/repos/${this.props.link[3]}/${this.props.link[4]}/contents`);
 		if (this.props.getSetting('api-key')) repo.set('Authorization', `token ${this.props.getSetting('api-token')}`);
 		repo.then(res => this.setState({ data: res }));
+
+		const branches = get(`https://api.github.com/repos/${this.props.link[3]}/${this.props.link[4]}/branches`);
+		if (this.props.getSetting('api-key')) branches.set('Authorization', `token ${this.props.getSetting('api-token')}`);
+		branches.then(res => this.setState({ branches: res.body }));
 	}
 
 	render() {
-		console.log(this.state.data);
 		return (
 			<Modal className="githubModel">
 				<Modal.Header>
 					<p>{this.props.link[4]}</p>
 				</Modal.Header>
 				<Modal.Content>
+					{this.state.branches && (
+						<select>
+							{this.state.branches.map(branch => (
+								<option value={branch.name}>{branch.name}</option>
+							))}
+						</select>
+					)}
 					{this.state.data && (
 						<div>
 							{this.state.data.body.map(tree => (
