@@ -41,7 +41,6 @@ module.exports = class githubModel extends React.PureComponent {
 	}
 
 	render() {
-		console.log(this.state.branches);
 		return (
 			<Modal className="githubModel">
 				<Modal.Header>
