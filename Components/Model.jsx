@@ -1,4 +1,5 @@
 const { Button } = require('powercord/components');
+const { SelectInput } = require('powercord/components/settings');
 const { close: closeModal } = require('powercord/modal');
 const { get } = require('powercord/http');
 const { React } = require('powercord/webpack');
@@ -29,7 +30,7 @@ module.exports = class githubModel extends React.PureComponent {
 		defaultB.then(res => {
 			state.repoInfo = res.body;
 			state.selectedBranch = res.body.default_branch;
-			this.setState(state); // only 1 rerender
+			setTimeout(() => this.setState(state), 100); // only 1 rerender
 		});
 	}
 
@@ -40,20 +41,13 @@ module.exports = class githubModel extends React.PureComponent {
 	}
 
 	render() {
-		console.log(this.state.repoInfo);
+		console.log(this.state.selectedBranch);
 		return (
 			<Modal className="githubModel">
 				<Modal.Header>
 					<p className="repo-name" onClick={() => openExternal(this.state.repoInfo?.html_url)}>
 						{this.props.link[4]}
 					</p>
-					{this.state.branches && (
-						<select className="Gbranches" value={this.state.selectedBranch} onChange={change => this.changeBranch(change.currentTarget.value)}>
-							{this.state.branches.map(branch => (
-								<option value={branch.name}>{branch.name}</option>
-							))}
-						</select>
-					)}
 					{this.state.repoInfo && (
 						<div className="star-svg" onClick={() => openExternal(`${this.state.repoInfo.html_url}/stargazers`)}>
 							<svg height={16} viewBox="0 0 16 16">
@@ -64,6 +58,15 @@ module.exports = class githubModel extends React.PureComponent {
 							</svg>
 							<p>{this.state.repoInfo.stargazers_count}</p>
 						</div>
+					)}
+					{this.state.branches && (
+						<SelectInput
+							className="Gbranches"
+							searchable={false}
+							value={this.state.selectedBranch}
+							onChange={change => this.changeBranch(change.currentTarget.value)}
+							options={this.state.branches.map(branch => ({ label: branch.name, value: branch.name }))}
+						/>
 					)}
 				</Modal.Header>
 				<Modal.Content>

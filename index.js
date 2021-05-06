@@ -48,5 +48,6 @@ module.exports = class CoolMF extends Plugin {
 
 	pluginWillUnload() {
 		uninject('Gmodel-context-menu');
+		powercord.api.settings.unregisterSettings(this.entityID);
 	}
 };
