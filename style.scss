@@ -39,7 +39,7 @@
 			p{
 				position: relative;
 				font-size: 18px;
-				bottom: 7px;
+				bottom: 9px;
 				left:5px;
 				&:hover{
 					text-decoration: underline;
@@ -56,7 +56,8 @@
 			.css-gvi9bl-control{
 				border-radius: 7px;
 			}
-			.divider-3573oO{
+			.divider-3573oO,
+			.css-o3gndj-placeholder{
 				display: none;
 			}
 			.css-6fzn47-control{
@@ -74,16 +75,27 @@
 	// body
 	.content-1LAB8Z{
 		border-radius: 0;
+		padding: 0;
 		.Gfile,
 		.Gfolder{
+			border-top: solid 1px var(--background-secondary);
+			padding: 10px 0 0 10px;
+			margin: 10px 0;
 			a {
 				color:var(--text-normal);
-				padding-left: 5px;
+				padding-left: 7px;
 				&:hover{
 					text-decoration: underline;
 					color:var(--text-link);
 				}
 			}
+			img{
+				position: relative;
+				top:2px;
+			}
+		}
+		&::-webkit-scrollbar{
+			display: none;
 		}
 	}
 	// footer
