@@ -81,21 +81,17 @@
 	}
 
 	// Branch Selector
-	.Gbranches {
-		background-color: rgba(0, 0, 0, 0.1);
+	select {
 		border: solid 1px rgba(32, 34, 37, 0.5);
-		color: var(--text-normal);
-		padding: 0 15px 0 4px;
-		border-radius: 7px;
+		background-color: rgba(0, 0, 0, 0.1);
+		color:var(--text-normal);
+		border-radius: 6px;
 		position: absolute;
 		min-height: 40px;
+		padding-left:6px;
 		font-size: 18px;
-		width: 300px;
-		top: 10px;
+		width:300px;
 		right: 10px;
-		option {
-			outline: none !important;
-		}
 	}
 
 	// footer

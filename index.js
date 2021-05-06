@@ -19,7 +19,7 @@ module.exports = class CoolMF extends Plugin {
 		const Menu = getModule(['MenuGroup', 'MenuItem'], false);
 		const MessageContextMenu = getModule(m => m.default?.displayName === 'MessageContextMenu', false);
 		inject('Gmodel-context-menu', MessageContextMenu, 'default', (args, res) => {
-			if (!args[0].message.content.includes('https://github.com/')) return res;
+			if (!args[0].message.content.includes('https://github.com/') && !args[0].message.content.includes('https://www.github.com/')) return res;
 			const link = args[0].message.content
 				.replace(/(?:\n|<|>)/g, ' ')
 				.split(' ')
