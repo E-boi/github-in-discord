@@ -37,11 +37,11 @@ module.exports = class githubModel extends React.PureComponent {
 	changeBranch(branch) {
 		const repo = get(`https://api.github.com/repos/${this.props.link[3]}/${this.props.link[4]}/contents/?ref=${branch}`);
 		if (this.props.getSetting('api-key')) repo.set('Authorization', `token ${decrypt(this.props.getSetting('api-key'))}`);
-		repo.then(res => this.setState({ data: res, selectedBranch: branch }));
+		repo.then(res => this.setState({ data: res.body, selectedBranch: branch }));
 	}
 
 	render() {
-		console.log(this.state.selectedBranch);
+		console.log(this.state.branches);
 		return (
 			<Modal className="githubModel">
 				<Modal.Header>
@@ -64,7 +64,7 @@ module.exports = class githubModel extends React.PureComponent {
 							className="Gbranches"
 							searchable={false}
 							value={this.state.selectedBranch}
-							onChange={change => this.changeBranch(change.currentTarget.value)}
+							onChange={change => this.changeBranch(change.value)}
 							options={this.state.branches.map(branch => ({ label: branch.name, value: branch.name }))}
 						/>
 					)}
