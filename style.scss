@@ -39,9 +39,15 @@
 			p {
 				position: relative;
 				font-size: 18px;
+<<<<<<< HEAD
 				bottom: 7px;
 				left: 5px;
 				&:hover {
+=======
+				bottom: 9px;
+				left:5px;
+				&:hover{
+>>>>>>> 2c0ae1daa1dbd7fa3f24d741ed579f7844ea0769
 					text-decoration: underline;
 					cursor: pointer;
 				}
@@ -56,7 +62,12 @@
 			.css-gvi9bl-control {
 				border-radius: 7px;
 			}
+<<<<<<< HEAD
 			.divider-3573oO {
+=======
+			.divider-3573oO,
+			.css-o3gndj-placeholder{
+>>>>>>> 2c0ae1daa1dbd7fa3f24d741ed579f7844ea0769
 				display: none;
 			}
 			.css-6fzn47-control {
@@ -74,16 +85,35 @@
 	// body
 	.content-1LAB8Z {
 		border-radius: 0;
+		padding: 0;
 		.Gfile,
+<<<<<<< HEAD
 		.Gfolder {
 			a {
 				color: var(--text-normal);
 				padding-left: 5px;
 				&:hover {
+=======
+		.Gfolder{
+			border-top: solid 1px var(--background-secondary);
+			padding: 10px 0 0 10px;
+			margin: 10px 0;
+			a {
+				color:var(--text-normal);
+				padding-left: 7px;
+				&:hover{
+>>>>>>> 2c0ae1daa1dbd7fa3f24d741ed579f7844ea0769
 					text-decoration: underline;
 					color: var(--text-link);
 				}
 			}
+			img{
+				position: relative;
+				top:2px;
+			}
+		}
+		&::-webkit-scrollbar{
+			display: none;
 		}
 	}
 	// footer
