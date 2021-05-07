@@ -1,10 +1,11 @@
-const { Button } = require('powercord/components');
+const { Button, Icon } = require('powercord/components');
 const { SelectInput } = require('powercord/components/settings');
 const { close: closeModal } = require('powercord/modal');
 const { get } = require('powercord/http');
-const { React } = require('powercord/webpack');
+const { React, getModule } = require('powercord/webpack');
 const { Modal } = require('powercord/components/modal');
 const { decrypt } = require('../crypto');
+const parser = getModule(['parse', 'parseTopic'], false);
 const {
 	shell: { openExternal },
 } = require('electron');
@@ -41,10 +42,23 @@ module.exports = class githubModel extends React.PureComponent {
 	}
 
 	viewFolder(folder) {
-		console.log(folder);
 		const repo = get(`https://api.github.com/repos/${this.props.link[3]}/${this.props.link[4]}/contents/${folder}?ref=${this.state.selectedBranch}`);
 		if (this.props.getSetting('api-key')) repo.set('Authorization', `token ${decrypt(this.props.getSetting('api-key'))}`);
 		repo.then(res => this.setState({ folder: res.body }));
+	}
+
+	openFile(fileName) {
+		if (this.state.folder) {
+			const file = this.state.folder.filter(m => m.name === fileName);
+			const type = fileName.split('.');
+			if (file.length === 0) return;
+			get(file[0].download_url).then(res => this.setState({ file: { content: String(res.body), type: type[type.length - 1] } }));
+		} else {
+			const file = this.state.rootDir.filter(m => m.name === fileName);
+			const type = fileName.split('.');
+			if (file.length === 0) return;
+			get(file[0].download_url).then(res => this.setState({ file: { content: String(res.body), type: type[type.length - 1] } }));
+		}
 	}
 
 	goBack() {
@@ -55,7 +69,7 @@ module.exports = class githubModel extends React.PureComponent {
 
 	render() {
 		return (
-			<Modal className="githubModel">
+			<Modal className={['githubModel', this.state.file ? 'infile' : '']}>
 				<Modal.Header>
 					<p className="repo-name" onClick={() => openExternal(this.state.repoInfo?.html_url)}>
 						{this.props.link[4]}
@@ -71,6 +85,11 @@ module.exports = class githubModel extends React.PureComponent {
 							<p>{this.state.repoInfo.stargazers_count}</p>
 						</div>
 					)}
+					{this.state.file && (
+						<div className="back-outfile">
+							<Icon name={Icon.Names[57]} direction="UP" onClick={() => this.setState({ file: null })} />
+						</div>
+					)}
 					{this.state.branches && (
 						<SelectInput
 							className="Gbranches"
@@ -82,7 +101,10 @@ module.exports = class githubModel extends React.PureComponent {
 					)}
 				</Modal.Header>
 				<Modal.Content>
-					{this.state.folder ? (
+					{this.state.file && (
+						<div>{parser.defaultRules.codeBlock.react({ content: this.state.file.content, lang: this.state.file.type }, null, {})}</div>
+					)}
+					{this.state.folder && !this.state.file && (
 						<div className="Gin-folder">
 							<div className="Gback-button">
 								<img src="https://raw.githubusercontent.com/Pavui/Assets/main/svg-path.svg" height={16} width={16} />
@@ -105,12 +127,13 @@ module.exports = class githubModel extends React.PureComponent {
 										  ]
 										: [
 												<img src="https://raw.githubusercontent.com/Pavui/Assets/main/svg-path%20(1).svg" height={16} width={16} />,
-												<a onClick={() => openExternal(tree.html_url)}>{tree.name}</a>,
+												<a onClick={() => this.openFile(tree.name)}>{tree.name}</a>,
 										  ]}
 								</p>
 							))}
 						</div>
-					) : (
+					)}{' '}
+					{!this.state.folder && !this.state.file && this.state.rootDir && (
 						<div className="Gout-folder">
 							{this.state.rootDir?.map(tree => (
 								<p
@@ -129,7 +152,7 @@ module.exports = class githubModel extends React.PureComponent {
 										  ]
 										: [
 												<img src="https://raw.githubusercontent.com/Pavui/Assets/main/svg-path%20(1).svg" height={16} width={16} />,
-												<a onClick={() => openExternal(tree.html_url)}>{tree.name}</a>,
+												<a onClick={() => this.openFile(tree.name)}>{tree.name}</a>,
 										  ]}
 								</p>
 							))}

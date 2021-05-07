@@ -1,3 +1,11 @@
+.infile {
+	height: 700px !important;
+
+	.content-1LAB8Z {
+		background-color: var(--background-secondary);
+	}
+}
+
 .githubModel {
 	border-radius: 10px;
 	width: 700px;
@@ -77,20 +85,20 @@
 		border-radius: 0;
 		padding: 0;
 		// Back button
-		.Gback-button{
-			img{
+		.Gback-button {
+			img {
 				padding: 3px 10px 0 10px;
 				position: relative;
-				height:20px;
+				height: 20px;
 				width: 20px;
-				top:3px;
+				top: 3px;
 			}
-			a{
+			a {
 				background-color: var(--background-secondary);
 				color: var(--text-normal);
 				border-radius: 7px;
 				padding: 5px 20px;
-				&:hover{
+				&:hover {
 					background-color: var(--background-tertiary);
 				}
 			}
