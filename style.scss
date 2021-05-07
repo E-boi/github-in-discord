@@ -3,109 +3,109 @@
 	width: 700px;
 	height: 450px;
 	// Header
-	.header-1TKi98{
+	.header-1TKi98 {
 		border-bottom: solid 2px var(--background-secondary);
 		box-shadow: none !important;
-		color:var(--text-normal);
+		color: var(--text-normal);
 		padding: 0 0 0 10px;
 		border-radius: 0;
 		overflow: unset;
-		height:60px;
+		height: 60px;
 		// Repository Title
-		.repo-name{
+		.repo-name {
 			text-transform: capitalize;
 			font-size: 24px;
 			margin: 0;
-			&:hover{
+			&:hover {
 				text-decoration: underline;
 				cursor: pointer;
 			}
 		}
 		// Stargazers
-		.star-svg{
+		.star-svg {
 			border-left: solid 1px rgba(255, 255, 255, 0.1);
 			position: relative;
 			margin-left: 8px;
-			padding-left:8px;
+			padding-left: 8px;
 			display: flex;
-			height:25px;
-			bottom:2px;
-			svg{
+			height: 25px;
+			bottom: 2px;
+			svg {
 				fill: var(--text-normal);
 				position: relative;
-				height:20px;
-				top:4px;
+				height: 20px;
+				top: 4px;
 			}
-			p{
+			p {
 				position: relative;
 				font-size: 18px;
 				bottom: 7px;
-				left:5px;
-				&:hover{
+				left: 5px;
+				&:hover {
 					text-decoration: underline;
 					cursor: pointer;
 				}
 			}
 		}
 		// Branch Selector
-		.marginBottom20-32qID7{
+		.marginBottom20-32qID7 {
 			position: absolute;
 			width: 300px;
 			right: 10px;
 			margin: 0;
-			.css-gvi9bl-control{
+			.css-gvi9bl-control {
 				border-radius: 7px;
 			}
-			.divider-3573oO{
+			.divider-3573oO {
 				display: none;
 			}
-			.css-6fzn47-control{
+			.css-6fzn47-control {
 				border-radius: 7px;
 			}
-			.css-3vaxre-menu{
+			.css-3vaxre-menu {
 				margin-top: 7px !important;
 				border-radius: 7px;
-				::-webkit-scrollbar{
+				::-webkit-scrollbar {
 					display: none;
 				}
 			}
 		}
 	}
 	// body
-	.content-1LAB8Z{
+	.content-1LAB8Z {
 		border-radius: 0;
 		.Gfile,
-		.Gfolder{
+		.Gfolder {
 			a {
-				color:var(--text-normal);
+				color: var(--text-normal);
 				padding-left: 5px;
-				&:hover{
+				&:hover {
 					text-decoration: underline;
-					color:var(--text-link);
+					color: var(--text-link);
 				}
 			}
 		}
 	}
 	// footer
-	.footer-2gL1pp{
+	.footer-2gL1pp {
 		border-radius: 0 0 7px 7px;
 		overflow: unset;
 		height: 57px;
 		padding: 0;
 		// Close Button
-		.button-38aScr{
+		.button-38aScr {
 			background-color: var(--background-tertiary);
 			border-radius: 7px;
 			position: absolute;
 			width: 40%;
-			right:6px;
-			top:10px;
-			&:hover{
+			right: 6px;
+			top: 10px;
+			&:hover {
 				background-color: var(--background-primary);
 			}
 		}
 		// Repository information
-		.repo-info{
+		.repo-info {
 			color: var(--text-normal);
 			position: absolute;
 			display: flex;
@@ -113,44 +113,44 @@
 			width: 57.5%;
 		}
 		// Author
-		.owner-profile{
+		.owner-profile {
 			position: absolute;
 			display: flex;
 			top: 7px;
-			img{
+			img {
 				border-radius: 5px;
-				height:40px;
+				height: 40px;
 				width: 40px;
 			}
-			p{
+			p {
 				text-transform: capitalize;
 				padding: 11px 0 0 8px;
 				font-size: 18px;
 				margin: 0;
-				&:hover{
+				&:hover {
 					text-decoration: underline;
 					cursor: pointer;
 				}
 			}
 		}
 		// Forks
-		.fork-svg{
+		.fork-svg {
 			padding: 18px 4px 0 0;
 			position: absolute;
 			display: flex;
 			right: 4px;
-			p{
+			p {
 				padding-left: 4px;
 				font-size: 20px;
 				margin: 0;
-				&:hover{
+				&:hover {
 					text-decoration: underline;
 					cursor: pointer;
 				}
 			}
-			svg{
+			svg {
 				fill: var(--text-normal);
-				height:20px;
+				height: 20px;
 			}
 		}
 	}

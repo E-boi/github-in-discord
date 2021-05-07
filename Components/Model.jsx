@@ -19,7 +19,7 @@ module.exports = class githubModel extends React.PureComponent {
 		const state = {};
 		const repo = get(`https://api.github.com/repos/${this.props.link[3]}/${this.props.link[4]}/contents`);
 		if (this.props.getSetting('api-key')) repo.set('Authorization', `token ${decrypt(this.props.getSetting('api-key'))}`);
-		repo.then(res => (state.data = res.body));
+		repo.then(res => (state.rootDir = res.body));
 
 		const branches = get(`https://api.github.com/repos/${this.props.link[3]}/${this.props.link[4]}/branches`);
 		if (this.props.getSetting('api-key')) branches.set('Authorization', `token ${decrypt(this.props.getSetting('api-key'))}`);
@@ -37,7 +37,20 @@ module.exports = class githubModel extends React.PureComponent {
 	changeBranch(branch) {
 		const repo = get(`https://api.github.com/repos/${this.props.link[3]}/${this.props.link[4]}/contents/?ref=${branch}`);
 		if (this.props.getSetting('api-key')) repo.set('Authorization', `token ${decrypt(this.props.getSetting('api-key'))}`);
-		repo.then(res => this.setState({ data: res.body, selectedBranch: branch }));
+		repo.then(res => this.setState({ rootDir: res.body, selectedBranch: branch }));
+	}
+
+	viewFolder(folder) {
+		console.log(folder);
+		const repo = get(`https://api.github.com/repos/${this.props.link[3]}/${this.props.link[4]}/contents/${folder}?ref=${this.state.selectedBranch}`);
+		if (this.props.getSetting('api-key')) repo.set('Authorization', `token ${decrypt(this.props.getSetting('api-key'))}`);
+		repo.then(res => this.setState({ folder: res.body }));
+	}
+
+	goBack() {
+		const dir = this.state.folder[0].path.split('/');
+		if (dir.length === 2) return this.setState({ folder: null });
+		this.viewFolder(this.state.folder[0].path.replace(`/${dir[dir.length - 2]}/${dir[dir.length - 1]}`, ''));
 	}
 
 	render() {
@@ -69,9 +82,11 @@ module.exports = class githubModel extends React.PureComponent {
 					)}
 				</Modal.Header>
 				<Modal.Content>
-					{this.state.data && (
-						<div>
-							{this.state.data.map(tree => (
+					{this.state.folder ? (
+						<div className="Gin-folder">
+							<img src="https://raw.githubusercontent.com/Pavui/Assets/main/svg-path.svg" height={16} width={16} />
+							<a onClick={() => this.goBack()}>...</a>
+							{this.state.folder.map(tree => (
 								<p
 									className={[
 										tree.type === 'dir' ? 'Gfolder' : 'Gfile',
@@ -81,12 +96,39 @@ module.exports = class githubModel extends React.PureComponent {
 										.join(' ')
 										.trimEnd()}
 								>
-									{tree.type === 'dir' ? (
-										<img src="https://raw.githubusercontent.com/Pavui/Assets/main/svg-path.svg" height={16} width={16} />
-									) : (
-										<img src="https://raw.githubusercontent.com/Pavui/Assets/main/svg-path%20(1).svg" height={16} width={16} />
-									)}
-									<a onClick={() => openExternal(tree.html_url)}>{tree.name}</a>
+									{tree.type === 'dir'
+										? [
+												<img src="https://raw.githubusercontent.com/Pavui/Assets/main/svg-path.svg" height={16} width={16} />,
+												<a onClick={() => this.viewFolder(tree.path)}>{tree.name}</a>,
+										  ]
+										: [
+												<img src="https://raw.githubusercontent.com/Pavui/Assets/main/svg-path%20(1).svg" height={16} width={16} />,
+												<a onClick={() => openExternal(tree.html_url)}>{tree.name}</a>,
+										  ]}
+								</p>
+							))}
+						</div>
+					) : (
+						<div className="Gout-folder">
+							{this.state.rootDir?.map(tree => (
+								<p
+									className={[
+										tree.type === 'dir' ? 'Gfolder' : 'Gfile',
+										tree.type !== 'dir' ? tree.name.split('.')[tree.name.split('.').length - 1] : '',
+										tree.type !== 'dir' ? (tree.name.includes('.') ? '' : 'blank') : '',
+									]
+										.join(' ')
+										.trimEnd()}
+								>
+									{tree.type === 'dir'
+										? [
+												<img src="https://raw.githubusercontent.com/Pavui/Assets/main/svg-path.svg" height={16} width={16} />,
+												<a onClick={() => this.viewFolder(tree.path)}>{tree.name}</a>,
+										  ]
+										: [
+												<img src="https://raw.githubusercontent.com/Pavui/Assets/main/svg-path%20(1).svg" height={16} width={16} />,
+												<a onClick={() => openExternal(tree.html_url)}>{tree.name}</a>,
+										  ]}
 								</p>
 							))}
 						</div>
