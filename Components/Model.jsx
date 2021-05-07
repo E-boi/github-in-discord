@@ -86,7 +86,7 @@ module.exports = class githubModel extends React.PureComponent {
 						<div className="Gin-folder">
 							<div className="Gback-button">
 								<img src="https://raw.githubusercontent.com/Pavui/Assets/main/svg-path.svg" height={16} width={16} />
-								<a onClick={() => this.goBack()}>...</a>
+								<a onClick={() => this.goBack()}>Back</a>
 							</div>
 							{this.state.folder.map(tree => (
 								<p

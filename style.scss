@@ -76,6 +76,27 @@
 	.content-1LAB8Z {
 		border-radius: 0;
 		padding: 0;
+		// Back button
+		.Gback-button{
+			img{
+				padding: 3px 10px 0 10px;
+				position: relative;
+				height:20px;
+				width: 20px;
+				top:3px;
+			}
+			a{
+				background-color: var(--background-secondary);
+				color: var(--text-normal);
+				border-radius: 7px;
+				padding: 5px 20px;
+				&:hover{
+					background-color: var(--background-tertiary);
+				}
+			}
+		}
+
+		// Files and folders
 		.Gfile,
 		.Gfolder {
 			border-top: solid 1px var(--background-secondary);
