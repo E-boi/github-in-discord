@@ -40,7 +40,6 @@ module.exports = class CoolMF extends Plugin {
 						})
 					)
 				);
-			console.log(res);
 			return res;
 		});
 		MessageContextMenu.default.displayName = 'MessageContextMenu';
