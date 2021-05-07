@@ -31,14 +31,14 @@ module.exports = class githubModel extends React.PureComponent {
 		defaultB.then(res => {
 			state.repoInfo = res.body;
 			state.selectedBranch = res.body.default_branch;
-			setTimeout(() => this.setState(state), 100); // only 1 rerender
+			this.setState(state); // only 1 rerender
 		});
 	}
 
 	changeBranch(branch) {
 		const repo = get(`https://api.github.com/repos/${this.props.link[3]}/${this.props.link[4]}/contents/?ref=${branch}`);
 		if (this.props.getSetting('api-key')) repo.set('Authorization', `token ${decrypt(this.props.getSetting('api-key'))}`);
-		repo.then(res => this.setState({ rootDir: res.body, selectedBranch: branch }));
+		repo.then(res => this.setState({ rootDir: res.body, selectedBranch: branch, folder: null, file: null }));
 	}
 
 	viewFolder(folder) {
@@ -69,7 +69,7 @@ module.exports = class githubModel extends React.PureComponent {
 
 	render() {
 		return (
-			<Modal className={['githubModel', this.state.file ? 'infile' : '']}>
+			<Modal className={['githubModel', this.state.file ? 'infile' : '', powercord.pluginManager.plugins.has('vpc-shiki') ? 'has-vpc' : '']}>
 				<Modal.Header>
 					<p className="repo-name" onClick={() => openExternal(this.state.repoInfo?.html_url)}>
 						{this.props.link[4]}
