@@ -82,7 +82,6 @@ module.exports = class githubModel extends React.PureComponent {
 	}
 
 	render() {
-		console.log(this.state.repoInfo);
 		let path;
 		if (this.state.folder && !this.state.file) {
 			const dir = this.state.folder[0]?.path.split('/');
