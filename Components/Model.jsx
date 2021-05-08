@@ -31,7 +31,7 @@ module.exports = class githubModel extends React.PureComponent {
 		defaultB.then(res => {
 			state.repoInfo = res.body;
 			state.selectedBranch = res.body.default_branch;
-			this.setState(state); // only 1 rerender
+			setTimeout(() => this.setState(state), 100); // only 1 rerender
 		});
 	}
 
@@ -52,12 +52,12 @@ module.exports = class githubModel extends React.PureComponent {
 			const file = this.state.folder.filter(m => m.name === fileName);
 			const type = fileName.split('.');
 			if (file.length === 0) return;
-			get(file[0].download_url).then(res => this.setState({ file: { content: String(res.body), type: type[type.length - 1] } }));
+			get(file[0].download_url).then(res => this.setState({ file: { path: file[0].path, content: String(res.body), type: type[type.length - 1] } }));
 		} else {
 			const file = this.state.rootDir.filter(m => m.name === fileName);
 			const type = fileName.split('.');
 			if (file.length === 0) return;
-			get(file[0].download_url).then(res => this.setState({ file: { content: String(res.body), type: type[type.length - 1] } }));
+			get(file[0].download_url).then(res => this.setState({ file: { path: file[0].path, content: String(res.body), type: type[type.length - 1] } }));
 		}
 	}
 
@@ -68,6 +68,11 @@ module.exports = class githubModel extends React.PureComponent {
 	}
 
 	render() {
+		let path;
+		if (this.state.folder && !this.state.file) {
+			const dir = this.state.folder[0]?.path.split('/');
+			path = this.state.folder[0].path.replace(`/${dir[dir.length - 1]}`, '');
+		} else if (this.state.file) path = this.state.file.path;
 		return (
 			<Modal className={['githubModel', this.state.file ? 'infile' : '', powercord.pluginManager.plugins.has('vpc-shiki') ? 'has-vpc' : '']}>
 				<Modal.Header>
@@ -102,10 +107,14 @@ module.exports = class githubModel extends React.PureComponent {
 				</Modal.Header>
 				<Modal.Content>
 					{this.state.file && (
-						<div>{parser.defaultRules.codeBlock.react({ content: this.state.file.content, lang: this.state.file.type }, null, {})}</div>
+						<div>
+							<p className="Gpath">{`/${path}`}</p>
+							{parser.defaultRules.codeBlock.react({ content: this.state.file.content, lang: this.state.file.type }, null, {})}
+						</div>
 					)}
 					{this.state.folder && !this.state.file && (
 						<div className="Gin-folder">
+							<p className="Gpath">{`/${path}/`}</p>
 							<div className="Gback-button">
 								<img src="https://raw.githubusercontent.com/Pavui/Assets/main/svg-path.svg" height={16} width={16} />
 								<a onClick={() => this.goBack()}>Back</a>

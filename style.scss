@@ -121,7 +121,17 @@
 		border-radius: 0;
 		padding: 0;
 		// Back button
+		.Gpath {
+			display: flex;
+			justify-content: center;
+			color: var(--text-normal);
+			margin-top: 7px;
+			padding-bottom: 7px;
+			border-bottom: solid 2px var(--background-secondary);
+		}
 		.Gback-button {
+			margin-bottom: 12px;
+			margin-top: -11px;
 			img {
 				padding: 3px 10px 0 10px;
 				position: relative;
