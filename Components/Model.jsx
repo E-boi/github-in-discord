@@ -10,6 +10,8 @@ const {
 	shell: { openExternal },
 } = require('electron');
 
+const classes = getModule(['markup'], false);
+
 module.exports = class githubModel extends React.PureComponent {
 	constructor() {
 		super();
