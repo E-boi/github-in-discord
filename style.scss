@@ -19,23 +19,34 @@
 		}
 	}
 	.hljs {
-		padding: 0;
+		padding: 0 !important;
 		.powercord-codeblock-table {
 			margin-left: 7px;
 		}
 		.powercord-codeblock-lang {
-			padding: 5px;
-			font-size: 16px;
+			padding: 4px;
+			font-size: 12px;
 		}
 		.powercord-codeblock-copy-btn {
 			position: absolute;
 			height: 20px;
 			opacity: 1;
-			top: 0;
+			top: 29px;
 			&:hover {
 				background-color: var(--background-primary);
 			}
 		}
+	}
+}
+
+.Gpath{
+	margin: 0px !important;
+	height:25px;
+	p{
+		position: absolute;
+		padding-left: 10px;
+		left: 0;
+		top:-6px;
 	}
 }
 
@@ -171,6 +182,12 @@
 		}
 		&::-webkit-scrollbar {
 			display: none;
+		}
+		.Gin-folder{
+			.Gback-button{
+				margin-bottom: 13px !important;
+				padding-top: 14px;
+			}
 		}
 	}
 	// footer
