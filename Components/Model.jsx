@@ -108,13 +108,17 @@ module.exports = class githubModel extends React.PureComponent {
 				<Modal.Content>
 					{this.state.file && (
 						<div>
-							<p className="Gpath">{`/${path}`}</p>
+							<div className="Gpath">
+								<p>{`/${path}`}</p>
+							</div>
 							{parser.defaultRules.codeBlock.react({ content: this.state.file.content, lang: this.state.file.type }, null, {})}
 						</div>
 					)}
 					{this.state.folder && !this.state.file && (
 						<div className="Gin-folder">
-							<p className="Gpath">{`/${path}/`}</p>
+							<div className="Gpath">
+								<p>{`/${path}/`}</p>
+							</div>
 							<div className="Gback-button">
 								<img src="https://raw.githubusercontent.com/Pavui/Assets/main/svg-path.svg" height={16} width={16} />
 								<a onClick={() => this.goBack()}>Back</a>
