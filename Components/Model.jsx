@@ -16,33 +16,47 @@ module.exports = class githubModel extends React.PureComponent {
 		this.state = {};
 	}
 
-	componentDidMount() {
-		const state = {};
-		const repo = get(`https://api.github.com/repos/${this.props.link[3]}/${this.props.link[4]}/contents`);
-		if (this.props.getSetting('api-key')) repo.set('Authorization', `token ${decrypt(this.props.getSetting('api-key'))}`);
-		repo.then(res => (state.rootDir = res.body));
-
-		const branches = get(`https://api.github.com/repos/${this.props.link[3]}/${this.props.link[4]}/branches`);
+	finishRequest(state, url) {
+		const branches = get(`${url}/branches`);
 		if (this.props.getSetting('api-key')) branches.set('Authorization', `token ${decrypt(this.props.getSetting('api-key'))}`);
 		branches.then(res => (state.branches = res.body));
 
-		const defaultB = get(`https://api.github.com/repos/${this.props.link[3]}/${this.props.link[4]}`);
-		if (this.props.getSetting('api-key')) defaultB.set('Authorization', `token ${decrypt(this.props.getSetting('api-key'))}`);
-		defaultB.then(res => {
-			state.repoInfo = res.body;
-			state.selectedBranch = res.body.default_branch;
+		const repo = get(`${url}/contents`);
+		if (this.props.getSetting('api-key')) repo.set('Authorization', `token ${decrypt(this.props.getSetting('api-key'))}`);
+		repo.then(res => {
+			state.rootDir = res.body;
 			setTimeout(() => this.setState(state), 100); // only 1 rerender
 		});
 	}
 
+	componentDidMount() {
+		const state = {};
+		const defaultB = get(`https://api.github.com/repos/${this.props.link[3]}/${this.props.link[4]}`);
+		if (this.props.getSetting('api-key')) defaultB.set('Authorization', `token ${decrypt(this.props.getSetting('api-key'))}`);
+		defaultB.then(res => {
+			if (res.body.message?.includes('Moved')) {
+				const newURL = get(res.body.url);
+				if (this.props.getSetting('api-key')) newURL.set('Authorization', `token ${decrypt(this.props.getSetting('api-key'))}`);
+				return newURL.then(ress => {
+					state.repoInfo = ress.body;
+					state.selectedBranch = ress.body.default_branch;
+					this.finishRequest(state, res.body.url);
+				});
+			}
+			state.repoInfo = res.body;
+			state.selectedBranch = res.body.default_branch;
+			this.finishRequest(state, res.body.url);
+		});
+	}
+
 	changeBranch(branch) {
-		const repo = get(`https://api.github.com/repos/${this.props.link[3]}/${this.props.link[4]}/contents/?ref=${branch}`);
+		const repo = get(`${this.state.repoInfo.url}/contents/?ref=${branch}`);
 		if (this.props.getSetting('api-key')) repo.set('Authorization', `token ${decrypt(this.props.getSetting('api-key'))}`);
 		repo.then(res => this.setState({ rootDir: res.body, selectedBranch: branch, folder: null, file: null }));
 	}
 
 	viewFolder(folder) {
-		const repo = get(`https://api.github.com/repos/${this.props.link[3]}/${this.props.link[4]}/contents/${folder}?ref=${this.state.selectedBranch}`);
+		const repo = get(`${this.state.repoInfo.url}/contents/${folder}?ref=${this.state.selectedBranch}`);
 		if (this.props.getSetting('api-key')) repo.set('Authorization', `token ${decrypt(this.props.getSetting('api-key'))}`);
 		repo.then(res => this.setState({ folder: res.body }));
 	}
@@ -68,6 +82,7 @@ module.exports = class githubModel extends React.PureComponent {
 	}
 
 	render() {
+		console.log(this.state.repoInfo);
 		let path;
 		if (this.state.folder && !this.state.file) {
 			const dir = this.state.folder[0]?.path.split('/');
@@ -77,7 +92,7 @@ module.exports = class githubModel extends React.PureComponent {
 			<Modal className={['githubModel', this.state.file ? 'infile' : '', powercord.pluginManager.plugins.has('vpc-shiki') ? 'has-vpc' : '']}>
 				<Modal.Header>
 					<p className="repo-name" onClick={() => openExternal(this.state.repoInfo?.html_url)}>
-						{this.props.link[4]}
+						{this.state.repoInfo ? this.state.repoInfo.name : this.props.link[4]}
 					</p>
 					{this.state.repoInfo && (
 						<div className="star-svg" onClick={() => openExternal(`${this.state.repoInfo.html_url}/stargazers`)}>
@@ -106,6 +121,7 @@ module.exports = class githubModel extends React.PureComponent {
 					)}
 				</Modal.Header>
 				<Modal.Content>
+					{!this.state.repoInfo && <p className="Gfetching">Getting repo...</p>}
 					{this.state.file && (
 						<div>
 							<div className="Gpath">
