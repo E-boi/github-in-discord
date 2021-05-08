@@ -10,7 +10,7 @@ const {
 	shell: { openExternal },
 } = require('electron');
 
-const classes = getModule(['markup'], false);
+const imageTypes = ['png', 'jpg'];
 
 module.exports = class githubModel extends React.PureComponent {
 	constructor() {
@@ -64,17 +64,15 @@ module.exports = class githubModel extends React.PureComponent {
 	}
 
 	openFile(fileName) {
-		if (this.state.folder) {
-			const file = this.state.folder.filter(m => m.name === fileName);
-			const type = fileName.split('.');
-			if (file.length === 0) return;
-			get(file[0].download_url).then(res => this.setState({ file: { path: file[0].path, content: String(res.body), type: type[type.length - 1] } }));
-		} else {
-			const file = this.state.rootDir.filter(m => m.name === fileName);
-			const type = fileName.split('.');
-			if (file.length === 0) return;
-			get(file[0].download_url).then(res => this.setState({ file: { path: file[0].path, content: String(res.body), type: type[type.length - 1] } }));
-		}
+		const file = this.state[this.state.folder ? 'folder' : 'rootDir'].filter(m => m.name === fileName);
+		const type = fileName.split('.');
+		if (file.length === 0) return;
+		get(file[0].download_url).then(res => {
+			let content;
+			if (imageTypes.includes(type[type.length - 1])) content = new Buffer.from(res.body).toString('base64');
+			else content = String(res.body);
+			this.setState({ file: { path: file[0].path, content, type: type[type.length - 1], isImage: imageTypes.includes(type[type.length - 1]) } });
+		});
 	}
 
 	goBack() {
@@ -84,6 +82,7 @@ module.exports = class githubModel extends React.PureComponent {
 	}
 
 	render() {
+		console.log(this.state.file);
 		let path;
 		if (this.state.folder && !this.state.file) {
 			const dir = this.state.folder[0]?.path.split('/');
@@ -128,7 +127,13 @@ module.exports = class githubModel extends React.PureComponent {
 							<div className="Gpath">
 								<p>{`/${path}`}</p>
 							</div>
-							{parser.defaultRules.codeBlock.react({ content: this.state.file.content, lang: this.state.file.type }, null, {})}
+							{this.state.file.isImage && (
+								<div className="Gimg scrollbarGhostHairline-1mSOM1">
+									<img src={`data:${this.state.file.type};base64,${this.state.file.content}`} />
+								</div>
+							)}
+							{!this.state.file.isImage &&
+								parser.defaultRules.codeBlock.react({ content: this.state.file.content, lang: this.state.file.type }, null, {})}
 						</div>
 					)}
 					{this.state.folder && !this.state.file && (
