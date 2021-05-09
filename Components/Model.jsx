@@ -88,7 +88,7 @@ module.exports = class githubModel extends React.PureComponent {
 			path = this.state.folder[0].path.replace(`/${dir[dir.length - 1]}`, '');
 		} else if (this.state.file) path = this.state.file.path;
 		return (
-			<Modal className={['githubModel', this.state.file ? 'infile' : '', powercord.pluginManager.plugins.has('vpc-shiki') ? 'has-vpc' : '']}>
+			<Modal className={['githubModel', this.state.file ? `infile ${powercord.pluginManager.get('vpc-shiki')?.ready ? 'has-vpc' : ''}` : '']}>
 				<Modal.Header>
 					<p className="repo-name" onClick={() => openExternal(this.state.repoInfo?.html_url)}>
 						{this.state.repoInfo ? this.state.repoInfo.name : this.props.link[4]}
