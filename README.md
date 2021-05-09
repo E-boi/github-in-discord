@@ -1,5 +1,5 @@
 # github-in-discord
-Have guthub in powercord! You can now look at repos inside of discord. Works with [Shiki Codeblocks](https://github.com/Vap0r1ze/vpc-shiki) too!
+Have github in powercord! You can now look at repos inside of discord. Works with [Shiki Codeblocks](https://github.com/Vap0r1ze/vpc-shiki) too!
 
 Huge thanks to [Pavy](https://github.com/loremly) for styling the modal. They basically made half the plugin and had the plugin idea.
 
