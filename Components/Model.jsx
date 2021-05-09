@@ -1,4 +1,4 @@
-const { Button, Icon } = require('powercord/components');
+const { Button, Icon, Spinner } = require('powercord/components');
 const { SelectInput } = require('powercord/components/settings');
 const { close: closeModal } = require('powercord/modal');
 const { get } = require('powercord/http');
@@ -119,7 +119,10 @@ module.exports = class githubModel extends React.PureComponent {
 					)}
 				</Modal.Header>
 				<Modal.Content>
-					{!this.state.repoInfo && <p className="Gfetching">Getting repo...</p>}
+					{!this.state.repoInfo && <p className="Gfetching">
+						Getting repo
+						<Spinner type="wanderingCubes"/>
+					</p>}
 					{this.state.file && (
 						<div>
 							<div className="Gpath">
