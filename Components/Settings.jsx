@@ -21,7 +21,7 @@ module.exports = class Gsettings extends React.PureComponent {
 							require('electron').shell.openExternal('https://github.com/settings/tokens/new?description=GitHub%20in%20Discord&scopes=public_repo')
 						}
 					>
-						Make a token (make sure the token has permission to read public repos)
+						Make a token (just scroll down and click generate token and copy and paste the token)
 					</a>
 				</p>
 			</div>
