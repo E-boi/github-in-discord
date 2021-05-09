@@ -139,9 +139,9 @@
 			overflow-x: auto;
 		}
 		.Gfetching {
-			display: flex;
-			justify-content: center;
-			align-self: center;
+			display: grid;
+			grid-template-rows: 2rem;
+			text-align: center;
 			color: var(--text-normal);
 		}
 		.Gpath {
