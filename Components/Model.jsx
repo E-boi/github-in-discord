@@ -108,6 +108,11 @@ module.exports = class githubModel extends React.PureComponent {
 							<Icon name={Icon.Names[57]} direction="LEFT" onClick={() => this.setState({ file: null })} />
 						</div>
 					)}
+					{this.state.folder && !this.state.file && (
+						<div className="back-outfile">
+							<Icon name={Icon.Names[57]} direction="LEFT" onClick={() => this.goBack()} />
+						</div>
+					)}
 					{this.state.branches && (
 						<SelectInput
 							className="Gbranches"
@@ -138,10 +143,6 @@ module.exports = class githubModel extends React.PureComponent {
 						<div className="Gin-folder">
 							<div className="Gpath">
 								<p>{`/${path}/`}</p>
-							</div>
-							<div className="Gback-button">
-								<img src={folderIcon} height={16} width={16} />
-								<a onClick={() => this.goBack()}>Back</a>
 							</div>
 							{this.state.folder.map(tree => (
 								<p
