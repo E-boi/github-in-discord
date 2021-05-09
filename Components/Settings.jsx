@@ -11,7 +11,10 @@ module.exports = class Gsettings extends React.PureComponent {
 					defaultValue={getSetting('api-key') ? decrypt(getSetting('api-key')) : undefined}
 					// mainly for the new people who give there tokens everything so script kiddies won't have the token easily.
 					// a comparison I made "it's like a condom it can still rip but you still had protection!"
-					onChange={val => updateSetting('api-key', encrypt(val))}
+					onChange={val => {
+						if (val === '') return updateSetting('api-key', undefined);
+						updateSetting('api-key', encrypt(val));
+					}}
 				>
 					Personal token
 				</TextInput>

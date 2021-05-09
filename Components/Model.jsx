@@ -26,6 +26,7 @@ module.exports = class githubModel extends React.PureComponent {
 		const branches = get(`${url}/branches`);
 		if (this.props.getSetting('api-key')) branches.set('Authorization', `token ${decrypt(this.props.getSetting('api-key'))}`);
 		branches.then(res => (state.branches = res.body));
+		branches.catch(err => this.setState({ errMsg: err.message }));
 
 		const repo = get(`${url}/contents`);
 		if (this.props.getSetting('api-key')) repo.set('Authorization', `token ${decrypt(this.props.getSetting('api-key'))}`);
@@ -33,6 +34,7 @@ module.exports = class githubModel extends React.PureComponent {
 			state.rootDir = res.body;
 			setTimeout(() => this.setState(state), 100); // only 1 rerender
 		});
+		repo.catch(err => this.setState({ errMsg: err.message }));
 	}
 
 	componentDidMount() {
@@ -43,6 +45,7 @@ module.exports = class githubModel extends React.PureComponent {
 			if (res.body.message?.includes('Moved')) {
 				const newURL = get(res.body.url);
 				if (this.props.getSetting('api-key')) newURL.set('Authorization', `token ${decrypt(this.props.getSetting('api-key'))}`);
+				newURL.catch(err => this.setState({ errMsg: err.message }));
 				return newURL.then(ress => {
 					state.repoInfo = ress.body;
 					state.selectedBranch = ress.body.default_branch;
@@ -53,18 +56,21 @@ module.exports = class githubModel extends React.PureComponent {
 			state.selectedBranch = res.body.default_branch;
 			this.finishRequest(state, res.body.url);
 		});
+		defaultB.catch(err => this.setState({ errMsg: err.message }));
 	}
 
 	changeBranch(branch) {
 		const repo = get(`${this.state.repoInfo.url}/contents/?ref=${branch}`);
 		if (this.props.getSetting('api-key')) repo.set('Authorization', `token ${decrypt(this.props.getSetting('api-key'))}`);
 		repo.then(res => this.setState({ rootDir: res.body, selectedBranch: branch, folder: null, file: null }));
+		repo.catch(err => this.setState({ errMsg: err.message }));
 	}
 
 	viewFolder(folder) {
 		const repo = get(`${this.state.repoInfo.url}/contents/${folder}?ref=${this.state.selectedBranch}`);
 		if (this.props.getSetting('api-key')) repo.set('Authorization', `token ${decrypt(this.props.getSetting('api-key'))}`);
 		repo.then(res => this.setState({ folder: res.body }));
+		repo.catch(err => this.setState({ errMsg: err.message }));
 	}
 
 	openFile(fileName) {
@@ -113,7 +119,7 @@ module.exports = class githubModel extends React.PureComponent {
 							<Icon name={Icon.Names[57]} direction="LEFT" onClick={() => this.goBack()} />
 						</div>
 					)}
-					{this.state.branches && (
+					{this.state.branches && !this.state.errMsg && (
 						<SelectInput
 							className="Gbranches"
 							searchable={false}
@@ -124,11 +130,19 @@ module.exports = class githubModel extends React.PureComponent {
 					)}
 				</Modal.Header>
 				<Modal.Content>
-					{!this.state.repoInfo && <p className="Gfetching">
-						Getting repo
-						<Spinner type="wanderingCubes"/>
-					</p>}
-					{this.state.file && (
+					{this.state.errMsg && (
+						<div className="Gerror">
+							<div className={getModule(['emptyStateImage', 'emptyStateSubtext'], false).emptyStateImage} />
+							<p className={`Gerror-text ${getModule(['emptyStateImage', 'emptyStateSubtext'], false).emptyStateSubtext}`}>{this.state.errMsg}</p>
+						</div>
+					)}
+					{!this.state.repoInfo && !this.state.errMsg && (
+						<p className="Gfetching">
+							Getting repo
+							<Spinner type="wanderingCubes" />
+						</p>
+					)}
+					{this.state.file && !this.state.errMsg && (
 						<div>
 							<div className="Gpath">
 								<p>{`/${path}`}</p>
@@ -142,7 +156,7 @@ module.exports = class githubModel extends React.PureComponent {
 								parser.defaultRules.codeBlock.react({ content: this.state.file.content, lang: this.state.file.type }, null, {})}
 						</div>
 					)}
-					{this.state.folder && !this.state.file && (
+					{this.state.folder && !this.state.file && !this.state.errMsg && (
 						<div className="Gin-folder">
 							<div className="Gpath">
 								<p>{`/${path}/`}</p>
@@ -164,7 +178,7 @@ module.exports = class githubModel extends React.PureComponent {
 							))}
 						</div>
 					)}
-					{!this.state.folder && !this.state.file && this.state.rootDir && (
+					{!this.state.folder && !this.state.file && this.state.rootDir && !this.state.errMsg && (
 						<div className="Gout-folder">
 							{this.state.rootDir?.map(tree => (
 								<p

@@ -138,6 +138,15 @@
 		.Gimg {
 			overflow-x: auto;
 		}
+		.Gerror {
+			display: flex;
+			align-items: center;
+			flex-direction: column;
+			& div {
+				margin-top: 20px;
+				margin-bottom: 20px;
+			}
+		}
 		.Gfetching {
 			display: grid;
 			grid-template-rows: 2rem;
