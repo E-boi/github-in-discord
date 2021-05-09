@@ -86,7 +86,7 @@
 			display: flex;
 			height: 25px;
 			bottom: 2px;
-			svg {
+			img {
 				fill: var(--text-normal);
 				position: relative;
 				height: 20px;
@@ -138,7 +138,6 @@
 		.Gimg {
 			overflow-x: auto;
 		}
-		// Back button
 		.Gfetching {
 			display: flex;
 			justify-content: center;
@@ -153,6 +152,7 @@
 			padding-bottom: 7px;
 			border-bottom: solid 2px var(--background-secondary);
 		}
+		// Back button
 		.Gback-button {
 			margin-bottom: 12px;
 			margin-top: -11px;
@@ -266,7 +266,7 @@
 					cursor: pointer;
 				}
 			}
-			svg {
+			img {
 				fill: var(--text-normal);
 				height: 20px;
 			}
