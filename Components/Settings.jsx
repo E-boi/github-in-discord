@@ -18,7 +18,7 @@ module.exports = class Gsettings extends React.PureComponent {
 				<p>
 					<a
 						onClick={() =>
-							require('electron').shell.openExternal('https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token')
+							require('electron').shell.openExternal('https://github.com/settings/tokens/new?description=GitHub%20in%20Discord&scopes=public_repo')
 						}
 					>
 						Make a token (make sure the token has permission to read public repos)
