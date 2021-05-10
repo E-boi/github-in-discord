@@ -20,12 +20,17 @@ module.exports = class CoolMF extends Plugin {
 		const MessageContextMenu = getModule(m => m.default?.displayName === 'MessageContextMenu', false);
 		inject('Gmodel-context-menu', MessageContextMenu, 'default', (args, res) => {
 			if (!args[0].message.content.includes('https://github.com/') && !args[0].message.content.includes('https://www.github.com/')) return res;
-			const link = args[0].message.content
+			const githubURL = args[0].message.content
 				.replace(/(?:\n|<|>)/g, ' ')
 				.split(' ')
 				.filter(f => f.match(/^https?:\/\/(www.)?github.com\/[\w-]+\/[\w-]+\/?/))[0]
 				.split('/');
-			if (link.length < 5) return res;
+			const pp = args[0].message.content
+				.replace(/(?:\n|<|>)/g, ' ')
+				.split(' ')
+				.filter(f => f.match(/^https?:\/\/(www.)?github.com\/[\w-]+\/[\w-]+\/?/))[0]
+				.split('blob/');
+			if (githubURL.length < 5) return res;
 			if (!findInReactTree(res, c => c.props?.id == 'githubModule'))
 				res.props.children.splice(
 					4,
@@ -34,7 +39,7 @@ module.exports = class CoolMF extends Plugin {
 						Menu.MenuGroup,
 						null,
 						React.createElement(Menu.MenuItem, {
-							action: () => openModal(() => React.createElement(Model, { link: link, getSetting: this.settings.get })),
+							action: () => openModal(() => React.createElement(Model, { file: pp ? pp[1] : null, link: githubURL, getSetting: this.settings.get })),
 							id: 'githubModule',
 							label: 'Open Repository',
 						})

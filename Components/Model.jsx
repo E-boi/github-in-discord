@@ -73,7 +73,16 @@ module.exports = class githubModel extends React.PureComponent {
 		repo.catch(err => this.setState({ errMsg: err.message }));
 	}
 
-	openFile(fileName) {
+	openFile(fileName, url) {
+		if (url) {
+			return get(`https://raw.githubusercontent.com/${this.props.link[3]}/${this.props.link[4]}/${url}`).then(res => {
+				let content;
+				const type = url.split('.');
+				if (imageTypes.includes(type[type.length - 1])) content = new Buffer.from(res.body).toString('base64');
+				else content = String(res.body);
+				this.setState({ file: { path: url, content, type: type[type.length - 1], isImage: imageTypes.includes(type[type.length - 1]) } });
+			});
+		}
 		const file = this.state[this.state.folder ? 'folder' : 'rootDir'].filter(m => m.name === fileName);
 		const type = fileName.split('.');
 		if (file.length === 0) return;
@@ -92,6 +101,7 @@ module.exports = class githubModel extends React.PureComponent {
 	}
 
 	render() {
+		if (this.props.file && !this.state.file) this.openFile(null, this.props.file);
 		let path;
 		if (this.state.folder && !this.state.file) {
 			const dir = this.state.folder[0]?.path.split('/');
@@ -111,7 +121,14 @@ module.exports = class githubModel extends React.PureComponent {
 					)}
 					{this.state.file && (
 						<div className="back-outfile">
-							<Icon name={Icon.Names[57]} direction="LEFT" onClick={() => this.setState({ file: null })} />
+							<Icon
+								name={Icon.Names[57]}
+								direction="LEFT"
+								onClick={() => {
+									this.setState({ file: null });
+									if (this.props.file) this.props.file = null;
+								}}
+							/>
 						</div>
 					)}
 					{this.state.folder && !this.state.file && (
@@ -136,7 +153,7 @@ module.exports = class githubModel extends React.PureComponent {
 							<p className={`Gerror-text ${getModule(['emptyStateImage', 'emptyStateSubtext'], false).emptyStateSubtext}`}>{this.state.errMsg}</p>
 						</div>
 					)}
-					{!this.state.repoInfo && !this.state.errMsg && (
+					{!this.state.repoInfo && !this.state.file && !this.state.errMsg && (
 						<p className="Gfetching">
 							Getting repo
 							<Spinner type="wanderingCubes" />
