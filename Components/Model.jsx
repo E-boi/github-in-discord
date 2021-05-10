@@ -111,12 +111,12 @@ module.exports = class githubModel extends React.PureComponent {
 					)}
 					{this.state.file && (
 						<div className="back-outfile">
-							<Icon name={Icon.Names[57]} direction="LEFT" onClick={() => this.setState({ file: null })} />
+							<Icon name={Icon.Names[58]} direction="LEFT" onClick={() => this.setState({ file: null })} />
 						</div>
 					)}
 					{this.state.folder && !this.state.file && (
 						<div className="back-outfile">
-							<Icon name={Icon.Names[57]} direction="LEFT" onClick={() => this.goBack()} />
+							<Icon name={Icon.Names[58]} direction="LEFT" onClick={() => this.goBack()} />
 						</div>
 					)}
 					{this.state.branches && !this.state.errMsg && (
