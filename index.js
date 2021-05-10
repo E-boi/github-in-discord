@@ -21,12 +21,12 @@ module.exports = class CoolMF extends Plugin {
 		inject('Gmodel-context-menu', MessageContextMenu, 'default', (args, res) => {
 			if (!args[0].message.content.includes('https://github.com/') && !args[0].message.content.includes('https://www.github.com/')) return res;
 			const githubURL = args[0].message.content
-				.replace(/(?:\n|<|>)/g, ' ')
+				.replace(/(?:\n|<|>|\*)/g, ' ')
 				.split(' ')
 				.filter(f => f.match(/^https?:\/\/(www.)?github.com\/[\w-]+\/[\w-]+\/?/))[0]
 				.split('/');
 			const pp = args[0].message.content
-				.replace(/(?:\n|<|>)/g, ' ')
+				.replace(/(?:\n|<|>|\*)/g, ' ')
 				.split(' ')
 				.filter(f => f.match(/^https?:\/\/(www.)?github.com\/[\w-]+\/[\w-]+\/?/))[0]
 				.split('blob/');
