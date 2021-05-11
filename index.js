@@ -25,7 +25,7 @@ module.exports = class CoolMF extends Plugin {
 				.split(' ')
 				.filter(f => f.match(/^https?:\/\/(www.)?github.com\/[\w-]+\/[\w-]+\/?/))[0]
 				.split('/');
-			const pp = args[0].message.content
+			const fileLink = args[0].message.content
 				.replace('tree', 'blob')
 				.replace(/(?:\n|<|>|\*|_|`)/g, ' ')
 				.split(' ')
@@ -40,7 +40,8 @@ module.exports = class CoolMF extends Plugin {
 						Menu.MenuGroup,
 						null,
 						React.createElement(Menu.MenuItem, {
-							action: () => openModal(() => React.createElement(Model, { file: pp ? pp[1] : null, link: githubURL, getSetting: this.settings.get })),
+							action: () =>
+								openModal(() => React.createElement(Model, { file: fileLink ? fileLink[1] : null, link: githubURL, getSetting: this.settings.get })),
 							id: 'githubModule',
 							label: 'Open Repository',
 						})

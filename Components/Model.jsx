@@ -68,10 +68,10 @@ module.exports = class githubModel extends React.PureComponent {
 
 	viewFolder(folder, branch) {
 		const repo = get(
-			`${this.state.repoInfo?.url ?? `https://api.github.com/repos/${this.props.link[3]}/${this.props.link[4]}`}/contents/${folder.replace(
+			`${this.state.repoInfo?.url || `https://api.github.com/repos/${this.props.link[3]}/${this.props.link[4]}`}/contents/${folder.replace(
 				/\/$/,
 				''
-			)}?ref=${branch ? branch : this.state.selectedBranch}`
+			)}?ref=${branch || this.state.selectedBranch}`
 		);
 		if (this.props.getSetting('api-key')) repo.set('Authorization', `token ${decrypt(this.props.getSetting('api-key'))}`);
 		repo.then(res => {
