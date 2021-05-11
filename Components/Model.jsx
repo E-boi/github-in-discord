@@ -75,8 +75,8 @@ module.exports = class githubModel extends React.PureComponent {
 		);
 		if (this.props.getSetting('api-key')) repo.set('Authorization', `token ${decrypt(this.props.getSetting('api-key'))}`);
 		repo.then(res => {
-			this.setState({ folder: res.body });
 			if (this.props.file) this.props.file = null;
+			this.setState({ folder: res.body });
 		});
 		repo.catch(err => this.setState({ errMsg: err.message }));
 	}
