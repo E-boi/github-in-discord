@@ -76,7 +76,7 @@ module.exports = class githubModel extends React.PureComponent {
 		if (this.props.getSetting('api-key')) repo.set('Authorization', `token ${decrypt(this.props.getSetting('api-key'))}`);
 		repo.then(res => {
 			this.setState({ folder: res.body });
-			this.props.file = null;
+			if (this.props.file) this.props.file = null;
 		});
 		repo.catch(err => this.setState({ errMsg: err.message }));
 	}
@@ -88,10 +88,11 @@ module.exports = class githubModel extends React.PureComponent {
 				const type = url.split('.');
 				if (imageTypes.includes(type[type.length - 1])) content = new Buffer.from(res.body).toString('base64');
 				else content = String(res.body);
+				if (this.props.file) this.props.file = null;
 				this.setState({ file: { path: url, content, type: type[type.length - 1], isImage: imageTypes.includes(type[type.length - 1]) } });
 			});
 			file.catch(err => {
-				if (err.message.includes('400'))
+				if (err.message.includes('400') || err.message.includes('404'))
 					this.viewFolder(this.props.file?.replace('/', ' ').split(' ')[1], this.props.file?.replace('/', ' ').split(' ')[0]);
 			});
 			return;
@@ -114,7 +115,7 @@ module.exports = class githubModel extends React.PureComponent {
 	}
 
 	render() {
-		if (this.props.file && !this.state.file) this.openFile(null, this.props.file);
+		if (this.props.file) this.openFile(null, this.props.file);
 		let path;
 		if (this.state.folder && !this.state.file) {
 			const dir = this.state.folder[0]?.path.split('/');
@@ -134,14 +135,7 @@ module.exports = class githubModel extends React.PureComponent {
 					)}
 					{this.state.file && (
 						<div className="back-outfile">
-							<Icon
-								name={'Arrow'}
-								direction="LEFT"
-								onClick={() => {
-									this.setState({ file: null });
-									if (this.props.file) this.props.file = null;
-								}}
-							/>
+							<Icon name={'Arrow'} direction="LEFT" onClick={() => this.setState({ file: null })} />
 						</div>
 					)}
 					{this.state.folder && this.state.repoInfo && !this.state.file && (
