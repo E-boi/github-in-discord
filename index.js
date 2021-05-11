@@ -26,6 +26,7 @@ module.exports = class CoolMF extends Plugin {
 				.filter(f => f.match(/^https?:\/\/(www.)?github.com\/[\w-]+\/[\w-]+\/?/))[0]
 				.split('/');
 			const pp = args[0].message.content
+				.replace('tree', 'blob')
 				.replace(/(?:\n|<|>|\*|_|`)/g, ' ')
 				.split(' ')
 				.filter(f => f.match(/^https?:\/\/(www.)?github.com\/[\w-]+\/[\w-]+\/?/))[0]
