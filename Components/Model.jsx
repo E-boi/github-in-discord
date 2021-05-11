@@ -66,14 +66,37 @@ module.exports = class githubModel extends React.PureComponent {
 		repo.catch(err => this.setState({ errMsg: err.message }));
 	}
 
-	viewFolder(folder) {
-		const repo = get(`${this.state.repoInfo.url}/contents/${folder}?ref=${this.state.selectedBranch}`);
+	viewFolder(folder, branch) {
+		const repo = get(
+			`${this.state.repoInfo?.url || `https://api.github.com/repos/${this.props.link[3]}/${this.props.link[4]}`}/contents/${folder.replace(
+				/\/$/,
+				''
+			)}?ref=${branch || this.state.selectedBranch}`
+		);
 		if (this.props.getSetting('api-key')) repo.set('Authorization', `token ${decrypt(this.props.getSetting('api-key'))}`);
-		repo.then(res => this.setState({ folder: res.body }));
+		repo.then(res => {
+			if (this.props.file) this.props.file = null;
+			this.setState({ folder: res.body });
+		});
 		repo.catch(err => this.setState({ errMsg: err.message }));
 	}
 
-	openFile(fileName) {
+	openFile(fileName, url) {
+		if (url) {
+			const file = get(`https://raw.githubusercontent.com/${this.props.link[3]}/${this.props.link[4]}/${url}`).then(res => {
+				let content;
+				const type = url.split('.');
+				if (imageTypes.includes(type[type.length - 1])) content = new Buffer.from(res.body).toString('base64');
+				else content = String(res.body);
+				if (this.props.file) this.props.file = null;
+				this.setState({ file: { path: url, content, type: type[type.length - 1], isImage: imageTypes.includes(type[type.length - 1]) } });
+			});
+			file.catch(err => {
+				if (err.message.includes('400') || err.message.includes('404'))
+					this.viewFolder(this.props.file?.replace('/', ' ').split(' ')[1], this.props.file?.replace('/', ' ').split(' ')[0]);
+			});
+			return;
+		}
 		const file = this.state[this.state.folder ? 'folder' : 'rootDir'].filter(m => m.name === fileName);
 		const type = fileName.split('.');
 		if (file.length === 0) return;
@@ -92,6 +115,7 @@ module.exports = class githubModel extends React.PureComponent {
 	}
 
 	render() {
+		if (this.props.file) this.openFile(null, this.props.file);
 		let path;
 		if (this.state.folder && !this.state.file) {
 			const dir = this.state.folder[0]?.path.split('/');
@@ -114,7 +138,7 @@ module.exports = class githubModel extends React.PureComponent {
 							<Icon name={'Arrow'} direction="LEFT" onClick={() => this.setState({ file: null })} />
 						</div>
 					)}
-					{this.state.folder && !this.state.file && (
+					{this.state.folder && this.state.repoInfo && !this.state.file && (
 						<div className="back-outfile">
 							<Icon name={'Arrow'} direction="LEFT" onClick={() => this.goBack()} />
 						</div>
@@ -136,7 +160,7 @@ module.exports = class githubModel extends React.PureComponent {
 							<p className={`Gerror-text ${getModule(['emptyStateImage', 'emptyStateSubtext'], false).emptyStateSubtext}`}>{this.state.errMsg}</p>
 						</div>
 					)}
-					{!this.state.repoInfo && !this.state.errMsg && (
+					{!this.state.repoInfo && !this.state.folder && !this.state.file && !this.state.errMsg && (
 						<p className="Gfetching">
 							Getting repo
 							<Spinner type="wanderingCubes" />
