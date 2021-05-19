@@ -12,7 +12,7 @@ module.exports = class CoolMF extends Plugin {
 
 		powercord.api.settings.registerSettings(this.entityID, {
 			category: this.entityID,
-			label: 'Github in discord',
+			label: 'Github in Discord',
 			render: Settings,
 		});
 
