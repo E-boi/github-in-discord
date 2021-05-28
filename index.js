@@ -21,17 +21,15 @@ module.exports = class CoolMF extends Plugin {
 		inject('Gmodel-context-menu', MessageContextMenu, 'default', (args, res) => {
 			if (!args[0].message.content.includes('https://github.com/') && !args[0].message.content.includes('https://www.github.com/')) return res;
 			const githubURL = args[0].message.content
-				.replace(/(?:\n|<|>|\*|_|`)/g, ' ')
-				.split(' ')
-				.filter(f => f.match(/^https?:\/\/(www.)?github.com\/[\w-]+\/[\w-]+\/?/))[0]
-				.split('/');
-			const fileLink = args[0].message.content
 				.replace('tree', 'blob')
 				.replace(/(?:\n|<|>|\*|_|`)/g, ' ')
 				.split(' ')
-				.filter(f => f.match(/^https?:\/\/(www.)?github.com\/[\w-]+\/[\w-]+\/?/))[0]
-				.split('blob/');
-			if (githubURL.length < 5) return res;
+				.filter(f => f.match(/^https?:\/\/(www.)?github.com\/[\w-]+\/[\w-]+\/?/));
+			if (githubURL[0].split('/').length < 5) return res;
+			const link = args[0].target.href?.match(/^https?:\/\/(www.)?github.com\/[\w-]+\/[\w-]+\/?/)[0].split('/') || githubURL[0].split('/');
+			const file =
+				[args[0].target.href]?.filter(f => f.match(/^https?:\/\/(www.)?github.com\/[\w-]+\/[\w-]+\/?/))[0].split('blob/') ||
+				githubURL[0].split('blob/');
 			if (!findInReactTree(res, c => c.props?.id == 'githubModule'))
 				res.props.children.splice(
 					4,
@@ -40,8 +38,7 @@ module.exports = class CoolMF extends Plugin {
 						Menu.MenuGroup,
 						null,
 						React.createElement(Menu.MenuItem, {
-							action: () =>
-								openModal(() => React.createElement(Model, { file: fileLink ? fileLink[1] : null, link: githubURL, getSetting: this.settings.get })),
+							action: () => openModal(() => React.createElement(Model, { file: file ? file[1] : null, link, getSetting: this.settings.get })),
 							id: 'githubModule',
 							label: 'Open Repository',
 						})
