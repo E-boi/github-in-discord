@@ -11,10 +11,10 @@ const {
 } = require('electron');
 
 const imageTypes = ['png', 'jpg'];
-const folderIcon = 'https://raw.githubusercontent.com/Loremly/Assets/main/github%20icons/folder.svg';
-const fileIcon = 'https://raw.githubusercontent.com/Loremly/Assets/main/github%20icons/file.svg';
-const starIcon = 'https://raw.githubusercontent.com/Loremly/Assets/main/github%20icons/repo-stars.svg';
-const forkIcon = 'https://raw.githubusercontent.com/Loremly/Assets/main/github%20icons/repo-forks.svg';
+const folderIcon = 'https://raw.githubusercontent.com/E-boi/assets/main/folder.svg';
+const fileIcon = 'https://raw.githubusercontent.com/E-boi/assets/main/ghfile.svg';
+const starIcon = 'https://raw.githubusercontent.com/E-boi/assets/main/star.svg';
+const forkIcon = 'https://raw.githubusercontent.com/E-boi/assets/main/ghfork.svg';
 
 module.exports = class githubModel extends React.PureComponent {
 	constructor() {
