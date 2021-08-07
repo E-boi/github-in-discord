@@ -69,6 +69,7 @@
 		}
 		// Repository Title
 		.repo-name {
+			color: var(--text-normal);
 			text-transform: capitalize;
 			font-size: 24px;
 			margin: 0;
@@ -79,6 +80,7 @@
 		}
 		// Stargazers
 		.star-svg {
+			color: var(--text-normal);
 			border-left: solid 1px rgba(255, 255, 255, 0.1);
 			position: relative;
 			margin-left: 8px;
@@ -241,6 +243,7 @@
 		}
 		// Author
 		.owner-profile {
+			color: var(--text-normal);
 			position: absolute;
 			display: flex;
 			top: 7px;
@@ -262,6 +265,7 @@
 		}
 		// Forks
 		.fork-svg {
+			color: var(--text-normal);
 			padding: 18px 4px 0 0;
 			position: absolute;
 			display: flex;

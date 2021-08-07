@@ -5,14 +5,11 @@ const { get } = require('powercord/http');
 const { React, getModule } = require('powercord/webpack');
 const { Modal } = require('powercord/components/modal');
 const { decrypt } = require('../crypto');
-const parser = getModule(['parse', 'parseTopic'], false);
-const {
-	shell: { openExternal },
-} = require('electron');
+
+const FileModal = require('./File');
+const FolderModal = require('./Folder');
 
 const imageTypes = ['png', 'jpg'];
-const folderIcon = 'https://raw.githubusercontent.com/E-boi/assets/main/folder.svg';
-const fileIcon = 'https://raw.githubusercontent.com/E-boi/assets/main/ghfile.svg';
 const starIcon = 'https://raw.githubusercontent.com/E-boi/assets/main/star.svg';
 const forkIcon = 'https://raw.githubusercontent.com/E-boi/assets/main/ghfork.svg';
 
@@ -23,7 +20,7 @@ module.exports = class githubModel extends React.PureComponent {
 	}
 
 	finishRequest(state, url) {
-		const branches = get(`${url}/branches`);
+		const branches = get(`${url}/branches?per_page=100`);
 		if (this.props.getSetting('api-key')) branches.set('Authorization', `token ${decrypt(this.props.getSetting('api-key'))}`);
 		branches.then(res => (state.branches = res.body));
 		branches.catch(err => this.setState({ errMsg: err.message }));
@@ -124,28 +121,28 @@ module.exports = class githubModel extends React.PureComponent {
 		return (
 			<Modal className={['githubModel', this.state.file ? `infile ${powercord.pluginManager.get('vpc-shiki')?.ready ? 'has-vpc' : ''}` : '']}>
 				<Modal.Header>
-					<p className="repo-name" onClick={() => openExternal(this.state.repoInfo?.html_url)}>
+					<a className='repo-name' href={this.state.repoInfo?.html_url} target='_blank'>
 						{this.state.repoInfo ? this.state.repoInfo.name : this.props.link[4]}
-					</p>
+					</a>
 					{this.state.repoInfo && (
-						<div className="star-svg" onClick={() => openExternal(`${this.state.repoInfo.html_url}/stargazers`)}>
+						<a className='star-svg' href={`${this.state.repoInfo.html_url}/stargazers`} target='_blank'>
 							<img src={starIcon} />
 							<p>{this.state.repoInfo.stargazers_count}</p>
-						</div>
+						</a>
 					)}
 					{this.state.file && (
-						<div className="back-outfile">
-							<Icon name={'Arrow'} direction="LEFT" onClick={() => this.setState({ file: null })} />
+						<div className='back-outfile'>
+							<Icon name={'Arrow'} direction='LEFT' onClick={() => this.setState({ file: null })} />
 						</div>
 					)}
 					{this.state.folder && this.state.repoInfo && !this.state.file && (
-						<div className="back-outfile">
-							<Icon name={'Arrow'} direction="LEFT" onClick={() => this.goBack()} />
+						<div className='back-outfile'>
+							<Icon name={'Arrow'} direction='LEFT' onClick={() => this.goBack()} />
 						</div>
 					)}
 					{this.state.branches && !this.state.errMsg && (
 						<SelectInput
-							className="Gbranches"
+							className='Gbranches'
 							searchable={false}
 							value={this.state.selectedBranch}
 							onChange={change => this.changeBranch(change.value)}
@@ -155,71 +152,27 @@ module.exports = class githubModel extends React.PureComponent {
 				</Modal.Header>
 				<Modal.Content>
 					{this.state.errMsg && (
-						<div className="Gerror">
+						<div className='Gerror'>
 							<div className={getModule(['emptyStateImage', 'emptyStateSubtext'], false).emptyStateImage} />
 							<p className={`Gerror-text ${getModule(['emptyStateImage', 'emptyStateSubtext'], false).emptyStateSubtext}`}>{this.state.errMsg}</p>
 						</div>
 					)}
 					{!this.state.repoInfo && !this.state.folder && !this.state.file && !this.state.errMsg && (
-						<p className="Gfetching">
+						<p className='Gfetching'>
 							Getting repo
-							<Spinner type="wanderingCubes" />
+							<Spinner type='wanderingCubes' />
 						</p>
 					)}
-					{this.state.file && !this.state.errMsg && (
-						<div>
-							<div className="Gpath">
-								<p>{`/${path}`}</p>
-							</div>
-							{this.state.file.isImage && (
-								<div className="Gimg scrollbarGhostHairline-1mSOM1">
-									<img src={`data:${this.state.file.type};base64,${this.state.file.content}`} />
-								</div>
-							)}
-							{!this.state.file.isImage &&
-								parser.defaultRules.codeBlock.react({ content: this.state.file.content, lang: this.state.file.type }, null, {})}
-						</div>
-					)}
+					{this.state.file && !this.state.errMsg && <FileModal file={this.state.file} path={path} />}
 					{this.state.folder && !this.state.file && !this.state.errMsg && (
-						<div className="Gin-folder">
-							<div className="Gpath">
-								<p>{`/${path}/`}</p>
-							</div>
-							{this.state.folder.map(tree => (
-								<p
-									className={[
-										tree.type === 'dir' ? 'Gfolder' : 'Gfile',
-										tree.type !== 'dir' ? tree.name.split('.')[tree.name.split('.').length - 1] : '',
-										tree.type !== 'dir' ? (tree.name.includes('.') ? '' : 'blank') : '',
-									]
-										.join(' ')
-										.trimEnd()}
-								>
-									{tree.type === 'dir'
-										? [<img src={folderIcon} height={16} width={16} />, <a onClick={() => this.viewFolder(tree.path)}>{tree.name}</a>]
-										: [<img src={fileIcon} height={16} width={16} />, <a onClick={() => this.openFile(tree.name)}>{tree.name}</a>]}
-								</p>
-							))}
-						</div>
+						<FolderModal
+							rootDir={this.state.folder}
+							onClick={(to, type) => (type === 'file' ? this.openFile(to) : this.viewFolder(to))}
+							path={path}
+						/>
 					)}
 					{!this.state.folder && !this.state.file && this.state.rootDir && !this.state.errMsg && (
-						<div className="Gout-folder">
-							{this.state.rootDir?.map(tree => (
-								<p
-									className={[
-										tree.type === 'dir' ? 'Gfolder' : 'Gfile',
-										tree.type !== 'dir' ? tree.name.split('.')[tree.name.split('.').length - 1] : '',
-										tree.type !== 'dir' ? (tree.name.includes('.') ? '' : 'blank') : '',
-									]
-										.join(' ')
-										.trimEnd()}
-								>
-									{tree.type === 'dir'
-										? [<img src={folderIcon} height={16} width={16} />, <a onClick={() => this.viewFolder(tree.path)}>{tree.name}</a>]
-										: [<img src={fileIcon} height={16} width={16} />, <a onClick={() => this.openFile(tree.name)}>{tree.name}</a>]}
-								</p>
-							))}
-						</div>
+						<FolderModal rootDir={this.state.rootDir} onClick={(to, type) => (type === 'file' ? this.openFile(to) : this.viewFolder(to))} />
 					)}
 				</Modal.Content>
 				<Modal.Footer>
@@ -232,15 +185,15 @@ module.exports = class githubModel extends React.PureComponent {
 						Close
 					</Button>
 					{this.state.repoInfo && (
-						<div className="repo-info">
-							<div className="owner-profile" onClick={() => openExternal(this.state.repoInfo.owner.html_url)}>
+						<div className='repo-info'>
+							<a className='owner-profile' href={this.state.repoInfo.owner.html_url} target='_blank'>
 								<img height={32} width={32} src={this.state.repoInfo.owner.avatar_url} />
 								<p>{this.state.repoInfo.owner.login}</p>
-							</div>
-							<div className="fork-svg" onClick={() => openExternal(`${this.state.repoInfo.html_url}/network/members`)}>
+							</a>
+							<a className='fork-svg' href={`${this.state.repoInfo.html_url}/network/members`} target='_blank'>
 								<img src={forkIcon} />
 								<p>{this.state.repoInfo.forks}</p>
-							</div>
+							</a>
 						</div>
 					)}
 				</Modal.Footer>

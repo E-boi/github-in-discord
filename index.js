@@ -28,7 +28,7 @@ module.exports = class CoolMF extends Plugin {
 			if (githubURL[0].split('/').length < 5) return res;
 			const link = args[0].target.href?.match(/^https?:\/\/(www.)?github.com\/[\w-]+\/[\w-]+\/?/)[0].split('/') || githubURL[0].split('/');
 			const file =
-				[args[0].target.href]?.filter(f => f.match(/^https?:\/\/(www.)?github.com\/[\w-]+\/[\w-]+\/?/))[0].split('blob/') ||
+				[args[0].target.href]?.filter(f => f?.match(/^https?:\/\/(www.)?github.com\/[\w-]+\/[\w-]+\/?/))[0]?.split('blob/') ||
 				githubURL[0].split('blob/');
 			if (!findInReactTree(res, c => c.props?.id == 'githubModule'))
 				res.props.children.splice(
