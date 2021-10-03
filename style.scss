@@ -9,7 +9,16 @@
 		user-select: text;
 	}
 	height: 700px !important;
-	width: 800px !important;
+	width: 80% !important;
+	margin: auto;
+	.markup-2BOw-j {
+		margin-left: 5px;
+		margin-right: 5px;
+		margin-bottom: 5px;
+		pre {
+			max-width: 100%;
+		}
+	}
 	.hljs {
 		padding: 0 !important;
 		.powercord-codeblock-table {
